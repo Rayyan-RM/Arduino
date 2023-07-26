@@ -1,2 +1,78 @@
 # Arduino
 Automatic Watering System According to Moisture Level with Sensing the Water Level in Tank
+int relayPin = 8;
+int sensor_pin = A0; // Soil Sensor input at Analog PIN A0
+int output_value;
+const int analogInPin = A1;
+int sensorValue = 0;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(relayPin, OUTPUT);
+  pinMode(sensor_pin, INPUT);
+  Serial.println("Reading From the Sensor ...");
+  delay(1000);
+  // declare pin  to be an output:
+  pinMode(2,OUTPUT);
+  pinMode(3,OUTPUT);
+  pinMode(4,OUTPUT);
+  pinMode(5,OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  ///MOSTURE LEVEL AND MOTOR MODE
+  output_value = analogRead(sensor_pin);
+  output_value = map(output_value, 1000, 10, 0, 100);
+  Serial.print("Moisture: ");
+  Serial.print(output_value);
+  Serial.println("%");
+  
+
+  if (output_value < 40) {
+    digitalWrite(relayPin, LOW); ///Motor neeed to work when the R.H blow the 40%
+    Serial.print("Motor - ON ");
+   
+    
+  } else {
+    digitalWrite(relayPin, HIGH);
+    Serial.print("Motor - OFF ");
+
+  }
+  Serial.print("\n");
+  delay(1000);
+
+///WATERLEVEL IN TANK
+
+  sensorValue = analogRead(analogInPin);
+  
+  if((sensorValue<=600)){
+    digitalWrite(4,HIGH);
+    digitalWrite(5,HIGH);
+    digitalWrite(2,LOW);
+    digitalWrite(3,LOW);
+    delay(100);
+    }
+  else if((sensorValue>=601)&&(sensorValue<=650)){
+   digitalWrite(3,HIGH);
+   digitalWrite(2,LOW);
+   digitalWrite(4,LOW);
+   digitalWrite(5,LOW);
+   delay(100);
+    }  
+  else if((sensorValue>=650)){
+    digitalWrite(2,HIGH);
+    digitalWrite(3,LOW);
+    digitalWrite(4,LOW);
+    digitalWrite(5,LOW);
+    delay(100);
+    } 
+  
+}
+
+
+
+
+
+
